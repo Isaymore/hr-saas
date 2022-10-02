@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<!-- <body>
+    <input onchange="test" type="file" style="display: block;">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+    <script>
+        const input = document.querySelector('input')
+        console.log(input)
+        function test(e){
+            console.log(666)
+            console.log(e)
+            console.dir(e)
+            console.log(e.target)
+            console.log(e.target.value)
+        }
+    </script> -->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.js"></script>
+<script>
+    const obj = {h:1,e:2,l:3}
+    const {h,e,l} = obj
+    console.log(obj)
+    console.log(obj.h)
+    console.log(obj['h'])
+    console.log(obj.h === obj['h'])
+    console.log(h,e,l)
+    // 测试对象的自定义迭代器
+    const myIterable = {}
+    // 添加或挂载对象属性的枚举写法：[]
+    myIterable[Symbol.iterator] = function* () {
+        yield 'hello';
+        yield 2;
+        yield true;
+    };
+    console.log(myIterable, typeof myIterable)
+    console.log(Symbol.iterator,typeof Symbol.iterator)
+    const arr = [...myIterable] // [1, 2, 3]
+    console.log(arr, typeof arr)
+    console.log(...arr)
+    const [a, b, c] = arr
+    console.log(a, typeof a)
+    console.log(b, typeof b)
+    console.log(c, typeof c)
+    // 测试数组和对象解构
+    // const arr = [1, 2]
+    // console.log(...arr)
+    // const obj = { a: 666, b: 888 }
+    // console.log(...obj)
+    // 递归函数验证
+    // function func(n) {
+    //     debugger
+    //     if (n === 1) {
+    //         console.log(666)
+    //         return 1
+    //     }
+    //     console.log(888)
+    //     return n * func(n - 1)
+    // }
+    // console.log(func(2))
+    // const func = async function testPromise() {
+    //     console.log(666)
+    //     // await 888
+    //     console.log(999)
+    //     // return 'ok'
+    //     return Promise.resolve('haha')
+    //     // return Promise.reject('失败了，加油~')
+    //     // return false
+    // }
+    // const promise = func()
+    // console.log(promise)
+    // console.log('同步代码', promise, typeof promise)
+    // // Promise.prototype.then()是异步的
+    // const result = promise.then(response => {
+    //     console.log(111)
+    //     console.log(response)
+    // })
+    // console.log('同步代码', 222)
+    // async function testAxios() {
+    //     const response = await axios({
+    //         url: 'https://api.uixsj.cn/hitokoto/get',
+    //         method: 'get'
+    //     })
+    //     console.log(response, typeof response)
+    // }
+    // testAxios()
+    // console.log(111)
+
+    // const promise = axios({
+    //     url: 'https://api.uixsj.cn/hitokoto/get',
+    //     method: 'get'
+    // }).then(response => {
+    //     console.log(666)
+    //     return axios({
+    //         url: 'https://api.uixsj.cn/hitokoto/get',
+    //         method: 'get'
+    //     })
+    // }).then(()=>{
+    //     console.log(888)
+    //     return 999
+    // })
+    // console.log('promise', promise, typeof promise)
+        // console.log(222)
+        // console.log('同步1')
+        // const promise = new Promise((resolve, reject) => {
+        //     console.log('同步2')
+        //     resolve('ok')
+        //     // reject(new Error('failure'))
+        //     console.log('同步3')
+        // }).then(response => {
+        //     console.log(1)
+        //     console.log('response', response, typeof response)
+        //     // return response
+        //     // return Promise.resolve('success')
+        //     return Promise.reject(new Error('failure'))
+        // }).catch(error => {
+        //     console.error('error', error, typeof error)
+        //     // return 2333
+        // })
+        // console.log('promise对象', promise, typeof promise)
+        // console.log('同步4')
+
+        // const obj1 = {
+        //     username:'xingye',
+        //     age:17
+        // }
+        // const obj2 = {
+        //     username:'xingye',
+        //     age:17
+        // }
+        // const obj3 = obj1
+        // // 引用数据类型，复制传递数据地址，引用传递
+        // console.log('引用数据类型', obj3 === obj1)
+        // console.log(obj1 === obj2)
+
+        // const a = 666
+        // const b = 666
+        // const c = a
+        // // 简单数据类型，复制传递数据，值传递
+        // console.log('简单数据类型', c === a)
+        // console.log(a === b)
+
+</script>
+</body>
+
+</html>

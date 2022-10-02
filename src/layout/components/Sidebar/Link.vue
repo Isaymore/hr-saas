@@ -1,3 +1,5 @@
+// 点击左侧菜单某一项，实现路由跳转
+
 <template>
   <component :is="type" v-bind="linkProps(to)">
     <slot />

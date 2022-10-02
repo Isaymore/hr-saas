@@ -1,4 +1,5 @@
 <template>
+  <!-- 如果return false，说明匹配失败，使用src/icons/svg中的svg文件 -->
   <div v-if="isExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon" v-on="$listeners" />
   <svg v-else :class="svgClass" aria-hidden="true" v-on="$listeners">
     <use :xlink:href="iconName" />
@@ -12,6 +13,7 @@ import { isExternal } from '@/utils/validate'
 export default {
   name: 'SvgIcon',
   props: {
+    // 子组件svg-icon接受父组件传过来的iconClass prop属性
     iconClass: {
       type: String,
       required: true
@@ -22,6 +24,7 @@ export default {
     }
   },
   computed: {
+    // 如果return false，说明匹配失败，使用src/icons/svg中的svg文件
     isExternal() {
       return isExternal(this.iconClass)
     },

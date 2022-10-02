@@ -1,14 +1,21 @@
 <template>
+  <!-- item.hidden 控制左侧菜单显示or隐藏 -->
   <div v-if="!item.hidden">
+    <!-- 使用插槽，传入HTML结构 -->
+    <!-- 显示左侧菜单 -->
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+      <!-- 点击左侧菜单某一项，实现路由跳转 -->
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <!-- 左侧菜单显示title和icon -->
           <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
     </template>
 
+    <!-- elementui的二级菜单组件，本项目没有用到，可以注释 -->
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+      <!-- 组件内使用具名插槽，传入HTML结构 -->
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
@@ -35,8 +42,9 @@ export default {
   name: 'SidebarItem',
   components: { Item, AppLink },
   mixins: [FixiOSBug],
+  // 子组件sidebar-item使用props，接收父组件Sidebar/index.vue传过来的item和basePath props属性
   props: {
-    // route object
+    // route object 路由对象
     item: {
       type: Object,
       required: true
@@ -45,6 +53,7 @@ export default {
       type: Boolean,
       default: false
     },
+    // 路由对象的path属性
     basePath: {
       type: String,
       default: ''

@@ -1,24 +1,30 @@
 import request from '@/utils/request'
 
-export function login(data) {
+// 封装登录api的方法
+export const reqlogin = ({ mobile, password }) => {
   return request({
-    url: '/vue-admin-template/user/login',
+    url: '/sys/login',
     method: 'post',
-    data
+    data: {
+      mobile,
+      password
+    }
   })
 }
 
-export function getInfo(token) {
+// 封装获取用户资料api的方法
+export const getUserInfo = () => {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/vue-admin-template/user/logout',
+    url: '/sys/profile',
     method: 'post'
+  })
+}
+
+// 封装获取用户基本信息-用户头像api的方法
+export const reqUserDetailById = (id) => {
+  return request({
+    url: `/sys/user/${id}`,
+    // axios请求方法默认是get，可写，可不写
+    method: 'get'
   })
 }

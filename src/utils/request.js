@@ -1,85 +1,65 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, isExpire } from './auth'
+import router from '@/router'
 
-// create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  baseURL: process.env.VUE_APP_BASE_API,
+  timeout: 5000
 })
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    // do something before request is sent
-
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+service.interceptors.request.use(config => {
+  // 如果本地缓存有token，给请求头参数Authorization注入token
+  // if判断条件可以写getToken()或store.getters.token
+  // 每个请求都会携带token
+  if (store.getters.token) {
+    /**
+     * 判断token是否过期，如果过期，分发action：退出登录
+     * 并路由跳转到/login
+     */
+    if (isExpire()) {
+      console.log(666)
+      store.dispatch('user/logout')
+      router.push({ path: '/login' })
+      // 加return，返回一个失败的promise对象，不会执行当前函数后面的代码
+      return Promise.reject(new Error('token过期'))
     }
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
+    config.headers.Authorization = `Bearer ${getToken()}`
+    // 或者使用对象的枚举属性写法
+    // config.headers['Authorization'] = `Bearer ${getToken()}`
   }
-)
+  // 必须要返回config,config是请求的配置信息对象
+  return config
+}, error => {
+  return Promise.reject(error)
+})
 
-// response interceptor
-service.interceptors.response.use(
+service.interceptors.response.use(response => {
+  // axios请求默认给response加一层data包裹，reponse.data可以直接拿到后台返回的数据
+  const res = response.data
+  // 方法一：res.code === 10000，说明接口请求成功
+  // 方法二：res.success为true,说明接口成功
+  if (res.success) {
+    return res
+  } else {
+    // 比如登录用户名密码不正确，会走这里的代码逻辑
+    Message.error(res.message)
+    return Promise.reject(new Error(res.message))
+  }
+}, error => {
   /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
+   * if判断后端返回的状态码是不是10002,如果是，说明token过期
+   * token过期，分发action：退出登录，并路由跳转到/login
    */
-  response => {
-    const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
-    }
-  },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+  if (error.response.data.code === 10002) {
+    console.log(888)
+    store.dispatch('user/logout')
+    router.push({ path: '/login' })
+  } else {
+    Message.error(error.message)
   }
-)
+  return Promise.reject(error)
+})
 
 export default service

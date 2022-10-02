@@ -1,6 +1,7 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
+      <!-- 二级路由的出口，二级路由组件被渲染到这里 -->
       <router-view :key="key" />
     </transition>
   </section>

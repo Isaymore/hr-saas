@@ -36,7 +36,21 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    proxy: {
+      // 请求路径以/api开头的，才会触发这里的代理配置
+      '/api': {
+        // 跨域请求的后端地址，请求url的前面会拼接这个target地址
+        target: 'http://ihrm.itheima.net',
+        // 改变请求来源（欺骗后端，你的请求是从target地址来的）
+        changeOrgin: true
+        // 请求url重写，因为真实路径中没有/api，所以要重写去掉，才能拼接正确的地址并转发请求
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
+      }
+    }
+    // 删掉后，提示404
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
